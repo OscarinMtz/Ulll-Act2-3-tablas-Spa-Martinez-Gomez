@@ -1,66 +1,62 @@
-Perfecto, a continuación te entrego TODO el contenido completo del proyecto, incluyendo:
+Te ayudo a crear el proyecto SPA completo paso a paso. Aquí está la estructura completa
 
-✅ Todos los pasos en formato README.md
-✅ Código completo para Django
-✅ Modelos completos
-✅ Views completos
-✅ URLs configurados correctamente
-✅ Templates completos (.html) para CRUD de Empleados
-✅ Bootstrap ya incluido
-✅ Diseño básico y responsivo
-✅ Código listo para copiar y pegar en una estructura de Django
+🔧 Paso 1: Crear Carpeta del Proyecto
+# 1. Crear carpeta del proyecto
+    mkdir UIII_Spa_0262
+    cd UIII_Spa_0262
 
-# 🧖‍♀️ Proyecto: Sistema de Administración para Spa (UIII_Spa_0262)
+🔧 Paso 2: Abrir VS Code
+# 2. Abrir VS Code sobre la carpeta
+    code .
 
-## 📌 Datos del Proyecto
-- **Lenguaje:** Python  
-- **Framework:** Django  
-- **Editor:** VS Code  
-- **Nombre del Proyecto Django:** `backend_spa`  
-- **App:** `app_spa`  
-- **Puerto del servidor:** 0262  
-- **Modelos:** `Empleados`, `Clientes`, `Servicios` (CRUD inicial solo para `Empleados`)
+🔧 Paso 3: Abrir Terminal en VS Code
+    Presiona Ctrl + Ñ (Windows/Linux) o Cmd + Ñ (Mac)
+    O ve al menú: View > Terminal
 
----
+🔧 Paso 4: Crear Entorno Virtual
+# 4. Crear entorno virtual
+    python -m venv .venv
 
-## 📘 PASO A PASO COMPLETO 🧠
+🔧 Paso 5: Activar Entorno Virtual
 
-### 1. Crear carpeta del proyecto
-```bash
-mkdir UIII_Spa_0262
-cd UIII_Spa_0262
-code .
+# 5. Activar entorno virtual (Windows)
+    .\.venv\Scripts\activate
 
-2. Crear entorno virtual
-python -m venv .venv
+# Para Mac/Linux:
+#    source .venv/bin/activate
 
-3. Activar entorno virtual
+🔧 Paso 6: Activar Intérprete de Python
+Presiona Ctrl + Shift + P
+Escribe: "Python: Select Interpreter"
+Selecciona el interprete de .venv
 
-En Windows:
+🔧 Paso 7: Instalar Django
+# 7. Instalar Django
+    pip install django
+    pip freeze > requirements.txt
 
-.venv\Scripts\activate
+🔧 Paso 8: Crear Proyecto Backend
+# 8. Crear proyecto sin duplicar carpeta
+    django-admin startproject backend_spa .
 
+🔧 Paso 9: Ejecutar Servidor en Puerto 0262
+# 9. Ejecutar servidor
+    python manage.py runserver 0262
 
-En Mac/Linux:
+🔧 Paso 10: Probar en Navegador
+    Copia y pega: http://127.0.0.1:0262/ en tu navegador
 
-source .venv/bin/activate
+🔧 Paso 11: Crear Aplicación
+# 11. Crear aplicación
+    python manage.py startapp app_spa
 
-4. Instalar Django
-pip install django
+🗃️ Paso 12: Modelos
+✅ app_spa/models.py
 
-5. Crear proyecto Django
-django-admin startproject backend_spa .
+    python
+    from django.db import models
 
-6. Crear aplicación app_spa
-python manage.py startapp app_spa
-
-7. Configurar modelos en app_spa/models.py
-from django.db import models
-
-# -----------------------------
-# MODELO: Empleados
-# -----------------------------
-class Empleados(models.Model):
+    class Empleados(models.Model):
     id_empleados = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
@@ -68,15 +64,11 @@ class Empleados(models.Model):
     telefono = models.IntegerField()
     cargo = models.CharField(max_length=100)
     id_servicios = models.IntegerField()
-
+    
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
 
-
-# -----------------------------
-# MODELO: Clientes
-# -----------------------------
-class Clientes(models.Model):
+    class Clientes(models.Model):
     id_clientes = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
@@ -85,15 +77,11 @@ class Clientes(models.Model):
     fecha_registro = models.DateField(auto_now_add=True)
     alergias = models.TextField(blank=True, null=True)
     preferencias = models.TextField(blank=True, null=True)
-
+    
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
 
-
-# -----------------------------
-# MODELO: Servicios
-# -----------------------------
-class Servicios(models.Model):
+    class Servicios(models.Model):
     id_servicios = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True)
@@ -101,324 +89,519 @@ class Servicios(models.Model):
     duracion = models.IntegerField(help_text="Duración en minutos")
     tipo_servicio = models.CharField(max_length=100)
     id_clientes = models.IntegerField()
-
+    
     def __str__(self):
         return self.nombre
 
-8. Migraciones
-python manage.py makemigrations
-python manage.py migrate
+🔧 Paso 12.5: Realizar Migraciones
 
-9. Crear vistas en app_spa/views.py
-from django.shortcuts import render, redirect
-from .models import Empleados
+    bash
+    python manage.py makemigrations
+    python manage.py migrate
 
-def inicio_spa(request):
+🧠 Paso 13-14: Vistas para Empleados
+✅ app_spa/views.py
+
+    python
+    from django.shortcuts import render, redirect, get_object_or_404
+    from .models import Empleados
+
+    def inicio_spa(request):
     return render(request, 'inicio.html')
 
-def agregar_empleado(request):
+    def agregar_empleado(request):
     if request.method == 'POST':
-        Empleados.objects.create(
+        empleado = Empleados(
             nombre=request.POST['nombre'],
             apellido=request.POST['apellido'],
             especialidad=request.POST['especialidad'],
             telefono=request.POST['telefono'],
             cargo=request.POST['cargo'],
-            id_servicios=request.POST['id_servicios'],
+            id_servicios=request.POST['id_servicios']
         )
+        empleado.save()
         return redirect('ver_empleados')
     return render(request, 'empleados/agregar_empleado.html')
 
-def ver_empleados(request):
+    def ver_empleados(request):
     empleados = Empleados.objects.all()
     return render(request, 'empleados/ver_empleados.html', {'empleados': empleados})
 
-def actualizar_empleado(request, id):
-    empleado = Empleados.objects.get(id_empleados=id)
+    def actualizar_empleado(request, id):
+    empleado = get_object_or_404(Empleados, id_empleados=id)
     return render(request, 'empleados/actualizar_empleado.html', {'empleado': empleado})
 
-def realizar_actualizacion_empleado(request, id):
-    empleado = Empleados.objects.get(id_empleados=id)
-    empleado.nombre = request.POST['nombre']
-    empleado.apellido = request.POST['apellido']
-    empleado.especialidad = request.POST['especialidad']
-    empleado.telefono = request.POST['telefono']
-    empleado.cargo = request.POST['cargo']
-    empleado.id_servicios = request.POST['id_servicios']
-    empleado.save()
+    def realizar_actualizacion_empleado(request, id):
+    if request.method == 'POST':
+        empleado = get_object_or_404(Empleados, id_empleados=id)
+        empleado.nombre = request.POST['nombre']
+        empleado.apellido = request.POST['apellido']
+        empleado.especialidad = request.POST['especialidad']
+        empleado.telefono = request.POST['telefono']
+        empleado.cargo = request.POST['cargo']
+        empleado.id_servicios = request.POST['id_servicios']
+        empleado.save()
+        return redirect('ver_empleados')
     return redirect('ver_empleados')
 
-def borrar_empleado(request, id):
-    empleado = Empleados.objects.get(id_empleados=id)
-    empleado.delete()
-    return redirect('ver_empleados')
+    def borrar_empleado(request, id):
+    empleado = get_object_or_404(Empleados, id_empleados=id)
+    if request.method == 'POST':
+        empleado.delete()
+        return redirect('ver_empleados')
+    return render(request, 'empleados/borrar_empleado.html', {'empleado': empleado})
 
-10. Crear URLs (app_spa/urls.py)
-from django.urls import path
-from . import views
+🎨 Paso 15-22: Plantillas HTML
+✅ app_spa/templates/base.html
 
-urlpatterns = [
-    path('', views.inicio_spa, name='inicio_spa'),
-    path('agregar_empleado/', views.agregar_empleado, name='agregar_empleado'),
-    path('ver_empleados/', views.ver_empleados, name='ver_empleados'),
-    path('actualizar_empleado/<int:id>/', views.actualizar_empleado, name='actualizar_empleado'),
-    path('realizar_actualizacion_empleado/<int:id>/', views.realizar_actualizacion_empleado, name='realizar_actualizacion_empleado'),
-    path('borrar_empleado/<int:id>/', views.borrar_empleado, name='borrar_empleado'),
-]
-
-11. Incluir URLs en backend_spa/urls.py
-from django.contrib import admin
-from django.urls import path, include
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('app_spa.urls')),
-]
-
-12. Registrar modelos en app_spa/admin.py
-from django.contrib import admin
-from .models import Empleados, Clientes, Servicios
-
-admin.site.register(Empleados)
-admin.site.register(Clientes)
-admin.site.register(Servicios)
-
-13. Crear y estructurar templates
-
-📁 app_spa/templates/
-
-base.html
-
-header.html
-
-navbar.html
-
-footer.html
-
-inicio.html
-
-📁 app_spa/templates/empleados/
-
-agregar_empleado.html
-
-ver_empleados.html
-
-actualizar_empleado.html
-
-borrar_empleado.html
-
-13.1 base.html
-<!DOCTYPE html>
-<html lang="es">
-<head>
+    html
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Sistema Spa{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema SPA</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .main-content {
+            min-height: calc(100vh - 120px);
+        }
+        .navbar-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .footer-custom {
+            background-color: #343a40;
+            color: white;
+            margin-top: auto;
+        }
+    </style>
+    </head>
+    <body>
     {% include 'header.html' %}
     {% include 'navbar.html' %}
     
-    <div class="container mt-4">
-        {% block content %}{% endblock %}
+    <div class="container main-content">
+        {% block content %}
+        {% endblock %}
     </div>
-
+    
     {% include 'footer.html' %}
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+    </html>
+✅ app_spa/templates/header.html
+    
+    html
+    <header class="text-center mb-4">
+    <h1 class="display-4 text-primary">💆 Sistema de Administración SPA</h1>
+    <p class="lead text-muted">Gestión integral de empleados, clientes y servicios</p>
+    </header>
 
-13.2 header.html
-<header class="bg-primary text-white text-center py-3">
-    <h1>Sistema de Administración de Spa</h1>
-</header>
+✅ app_spa/templates/navbar.html
 
-13.3 navbar.html
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">💆 Sistema Spa</a>
-        <div class="collapse navbar-collapse">
+    html
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'inicio_spa' %}">
+            🏠 Sistema SPA
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="{% url 'inicio_spa' %}">Inicio</a></li>
-
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'inicio_spa' %}">
+                        📊 Inicio
+                    </a>
+                </li>
+                
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Empleados</a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        👥 Empleados
+                    </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'agregar_empleado' %}">Agregar</a></li>
-                        <li><a class="dropdown-item" href="{% url 'ver_empleados' %}">Ver</a></li>
+                        <li><a class="dropdown-item" href="{% url 'agregar_empleado' %}">Agregar Empleado</a></li>
+                        <li><a class="dropdown-item" href="{% url 'ver_empleados' %}">Ver Empleados</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Actualizar Empleado</a></li>
+                        <li><a class="dropdown-item" href="#">Borrar Empleado</a></li>
                     </ul>
                 </li>
-
+                
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Clientes</a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        👨‍💼 Clientes
+                    </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Agregar</a></li>
-                        <li><a class="dropdown-item" href="#">Ver</a></li>
+                        <li><a class="dropdown-item" href="#">Agregar Cliente</a></li>
+                        <li><a class="dropdown-item" href="#">Ver Clientes</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Actualizar Cliente</a></li>
+                        <li><a class="dropdown-item" href="#">Borrar Cliente</a></li>
                     </ul>
                 </li>
-
+                
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Servicios</a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        💅 Servicios
+                    </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Agregar</a></li>
-                        <li><a class="dropdown-item" href="#">Ver</a></li>
+                        <li><a class="dropdown-item" href="#">Agregar Servicio</a></li>
+                        <li><a class="dropdown-item" href="#">Ver Servicios</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Actualizar Servicio</a></li>
+                        <li><a class="dropdown-item" href="#">Borrar Servicio</a></li>
                     </ul>
                 </li>
             </ul>
         </div>
     </div>
-</nav>
+    </nav>
+✅ app_spa/templates/footer.html
 
-13.4 footer.html
-<footer class="text-center mt-4 py-3 bg-dark text-white fixed-bottom">
-    &copy; {{ now|date:"Y" }} Creado por Martinez Gomez Oscar, Cbtis 128
-</footer>
-
-13.5 inicio.html
-{% extends 'base.html' %}
-{% block title %}Inicio - Sistema Spa{% endblock %}
-
-{% block content %}
-<div class="text-center">
-    <h2>Bienvenido al Sistema de Administración del Spa</h2>
-    <p class="mt-3">Aquí podrás gestionar empleados, clientes y servicios de manera eficiente.</p>
-    <img src="https://images.pexels.com/photos/3865750/pexels-photo-3865750.jpeg?auto=compress&cs=tinysrgb&w=600" width="400" class="img-fluid rounded shadow">
-</div>
-{% endblock %}
-
-Templates CRUD de Empleados
-📄 empleados/agregar_empleado.html
-{% extends 'base.html' %}
-{% block title %}Agregar Empleado{% endblock %}
-
-{% block content %}
-<h2 class="mb-4">Agregar Nuevo Empleado</h2>
-<form method="POST">
-    {% csrf_token %}
-    <div class="mb-3">
-        <label>Nombre:</label>
-        <input type="text" name="nombre" class="form-control" required>
+    html
+    <footer class="footer-custom py-3 mt-5">
+    <div class="container text-center">
+        <p class="mb-0">
+            &copy; 2025 Sistema SPA - Todos los derechos reservados | 
+            Fecha: {% now "d/m/Y" %} | 
+            Creado por Martinez Gomez Oscar, Cbtis 128
+        </p>
     </div>
-    <div class="mb-3">
-        <label>Apellido:</label>
-        <input type="text" name="apellido" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label>Especialidad:</label>
-        <input type="text" name="especialidad" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label>Teléfono:</label>
-        <input type="number" name="telefono" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label>Cargo:</label>
-        <input type="text" name="cargo" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label>ID Servicio:</label>
-        <input type="number" name="id_servicios" class="form-control" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <a href="{% url 'ver_empleados' %}" class="btn btn-secondary">Cancelar</a>
-</form>
-{% endblock %}
+    </footer>
+✅ app_spa/templates/inicio.html
 
-📄 empleados/ver_empleados.html
-{% extends 'base.html' %}
-{% block title %}Ver Empleados{% endblock %}
+    html
+    {% extends 'base.html' %}
 
-{% block content %}
-<h2 class="mb-4">Lista de Empleados</h2>
-<table class="table table-bordered table-striped">
-    <thead class="table-dark">
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Especialidad</th>
-            <th>Teléfono</th>
-            <th>Cargo</th>
-            <th>ID Servicio</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for empleado in empleados %}
-        <tr>
-            <td>{{ empleado.id_empleados }}</td>
-            <td>{{ empleado.nombre }}</td>
-            <td>{{ empleado.apellido }}</td>
-            <td>{{ empleado.especialidad }}</td>
-            <td>{{ empleado.telefono }}</td>
-            <td>{{ empleado.cargo }}</td>
-            <td>{{ empleado.id_servicios }}</td>
-            <td>
-                <a class="btn btn-warning btn-sm" href="{% url 'actualizar_empleado' empleado.id_empleados %}">Editar</a>
-                <a class="btn btn-danger btn-sm" href="{% url 'borrar_empleado' empleado.id_empleados %}">Borrar</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endblock %}
-
-📄 empleados/actualizar_empleado.html
-{% extends 'base.html' %}
-{% block title %}Actualizar Empleado{% endblock %}
-
-{% block content %}
-<h2 class="mb-4">Actualizar Empleado</h2>
-<form method="POST" action="{% url 'realizar_actualizacion_empleado' empleado.id_empleados %}">
-    {% csrf_token %}
-    <div class="mb-3">
-        <label>Nombre:</label>
-        <input type="text" name="nombre" value="{{ empleado.nombre }}" class="form-control" required>
+    {% block content %}
+    <div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-primary">Bienvenido al Sistema SPA</h2>
+                <p class="card-text">
+                    Este sistema permite la gestión integral de tu spa, incluyendo:
+                </p>
+                <ul>
+                    <li>Gestión de empleados y sus especialidades</li>
+                    <li>Registro y seguimiento de clientes</li>
+                    <li>Control de servicios y tratamientos</li>
+                    <li>Gestión de citas y horarios</li>
+                </ul>
+                <p class="text-muted">
+                    Utiliza el menú de navegación para acceder a las diferentes secciones del sistema.
+                </p>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label>Apellido:</label>
-        <input type="text" name="apellido" value="{{ empleado.apellido }}" class="form-control" required>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" 
+                     alt="SPA Relajante" class="img-fluid rounded">
+                <p class="mt-3 text-muted">Ambiente relajante y profesional</p>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label>Especialidad:</label>
-        <input type="text" name="especialidad" value="{{ empleado.especialidad }}" class="form-control" required>
     </div>
-    <div class="mb-3">
-        <label>Teléfono:</label>
-        <input type="number" name="telefono" value="{{ empleado.telefono }}" class="form-control" required>
+    {% endblock %}
+✅ app_spa/templates/empleados/agregar_empleado.html
+
+    html
+    {% extends 'base.html' %}
+
+    {% block content %}
+    <div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">👥 Agregar Nuevo Empleado</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" name="nombre" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Apellido</label>
+                            <input type="text" class="form-control" name="apellido" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Especialidad</label>
+                            <input type="text" class="form-control" name="especialidad" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teléfono</label>
+                            <input type="number" class="form-control" name="telefono" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Cargo</label>
+                            <input type="text" class="form-control" name="cargo" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">ID Servicios</label>
+                            <input type="number" class="form-control" name="id_servicios" required>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">Guardar Empleado</button>
+                        <a href="{% url 'ver_empleados' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label>Cargo:</label>
-        <input type="text" name="cargo" value="{{ empleado.cargo }}" class="form-control" required>
     </div>
-    <div class="mb-3">
-        <label>ID Servicio:</label>
-        <input type="number" name="id_servicios" value="{{ empleado.id_servicios }}" class="form-control" required>
+    {% endblock %}
+✅ app_spa/templates/empleados/ver_empleados.html
+
+    html
+    {% extends 'base.html' %}
+
+    {% block content %}
+    <div class="card">
+    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">📋 Lista de Empleados</h4>
+        <a href="{% url 'agregar_empleado' %}" class="btn btn-light">➕ Agregar Empleado</a>
     </div>
-    <button type="submit" class="btn btn-primary">Actualizar</button>
-    <a href="{% url 'ver_empleados' %}" class="btn btn-secondary">Cancelar</a>
-</form>
-{% endblock %}
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Especialidad</th>
+                        <th>Teléfono</th>
+                        <th>Cargo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for empleado in empleados %}
+                    <tr>
+                        <td>{{ empleado.id_empleados }}</td>
+                        <td>{{ empleado.nombre }}</td>
+                        <td>{{ empleado.apellido }}</td>
+                        <td>{{ empleado.especialidad }}</td>
+                        <td>{{ empleado.telefono }}</td>
+                        <td>{{ empleado.cargo }}</td>
+                        <td>
+                            <a href="{% url 'actualizar_empleado' empleado.id_empleados %}" class="btn btn-warning btn-sm">✏️ Editar</a>
+                            <a href="{% url 'borrar_empleado' empleado.id_empleados %}" class="btn btn-danger btn-sm">🗑️ Borrar</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">No hay empleados registrados</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+    {% endblock %}
+✅ app_spa/templates/empleados/actualizar_empleado.html
 
-📄 empleados/borrar_empleado.html
-{% extends 'base.html' %}
-{% block title %}Borrar Empleado{% endblock %}
+    html
+    {% extends 'base.html' %}
 
-{% block content %}
-<h2 class="mb-4">Borrar Empleado</h2>
-<p>¿Estás seguro de que deseas eliminar al empleado: <strong>{{ empleado.nombre }} {{ empleado.apellido }}</strong>?</p>
+    {% block content %}
+    <div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0">✏️ Actualizar Empleado</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{% url 'realizar_actualizacion_empleado' empleado.id_empleados %}">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" name="nombre" value="{{ empleado.nombre }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Apellido</label>
+                            <input type="text" class="form-control" name="apellido" value="{{ empleado.apellido }}" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Especialidad</label>
+                            <input type="text" class="form-control" name="especialidad" value="{{ empleado.especialidad }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teléfono</label>
+                            <input type="number" class="form-control" name="telefono" value="{{ empleado.telefono }}" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Cargo</label>
+                            <input type="text" class="form-control" name="cargo" value="{{ empleado.cargo }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">ID Servicios</label>
+                            <input type="number" class="form-control" name="id_servicios" value="{{ empleado.id_servicios }}" required>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-warning">Actualizar Empleado</button>
+                        <a href="{% url 'ver_empleados' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    {% endblock %}
+✅ app_spa/templates/empleados/borrar_empleado.html
 
-<form method="POST">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
-    <a href="{% url 'ver_empleados' %}" class="btn btn-secondary">Cancelar</a>
-</form>
-{% endblock %}
+    html
+    {% extends 'base.html' %}
 
-14. Iniciar servidor
-python manage.py runserver 0262
+    {% block content %}
+    <div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">🗑️ Confirmar Eliminación</h4>
+            </div>
+            <div class="card-body text-center">
+                <h5>¿Estás seguro de que quieres eliminar a este empleado?</h5>
+                <p class="text-muted">{{ empleado.nombre }} {{ empleado.apellido }}</p>
+                <p><strong>Especialidad:</strong> {{ empleado.especialidad }}</p>
+                <p><strong>Cargo:</strong> {{ empleado.cargo }}</p>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button type="submit" class="btn btn-danger">Sí, Eliminar</button>
+                        <a href="{% url 'ver_empleados' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    {% endblock %}
 
-✅ Proyecto funcional con CRUD completo para Empleados
+🔗 Paso 23-24: URLs de la Aplicación
+✅ app_spa/urls.py
 
-Lista para extender con CRUD de Clientes y Servicios más adelante.
+    python
+    from django.urls import path
+    from . import views
+
+    urlpatterns = [
+    path('', views.inicio_spa, name='inicio_spa'),
+    path('agregar-empleado/', views.agregar_empleado, name='agregar_empleado'),
+    path('ver-empleados/', views.ver_empleados, name='ver_empleados'),
+    path('actualizar-empleado/<int:id>/', views.actualizar_empleado, name='actualizar_empleado'),
+    path('realizar-actualizacion-empleado/<int:id>/', views.realizar_actualizacion_empleado, name='realizar_actualizacion_empleado'),
+    path('borrar-empleado/<int:id>/', views.borrar_empleado, name='borrar_empleado'),
+    ]
+
+⚙️ Paso 25: Configuración Settings
+✅ backend_spa/settings.py
+
+    python
+    INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'app_spa',  # Agregar esta línea
+    ]
+
+# Agregar al final del archivo
+
+    import os
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+🔗 Paso 26: URLs del Proyecto
+✅ backend_spa/urls.py
+
+    python
+    from django.contrib import admin
+    from django.urls import path, include
+
+    urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('app_spa.urls')),
+    ]
+
+👨‍💼 Paso 27: Registrar Modelos en Admin
+✅ app_spa/admin.py
+
+    python
+    from django.contrib import admin
+    from .models import Empleados, Clientes, Servicios
+
+    @admin.register(Empleados)
+    class EmpleadosAdmin(admin.ModelAdmin):
+    list_display = ('id_empleados', 'nombre', 'apellido', 'especialidad', 'cargo')
+    search_fields = ('nombre', 'apellido', 'especialidad')
+
+    @admin.register(Clientes)
+    class ClientesAdmin(admin.ModelAdmin):
+    list_display = ('id_clientes', 'nombre', 'apellido', 'email', 'fecha_registro')
+    search_fields = ('nombre', 'apellido', 'email')
+
+    @admin.register(Servicios)
+    class ServiciosAdmin(admin.ModelAdmin):
+    list_display = ('id_servicios', 'nombre', 'precio', 'duracion', 'tipo_servicio')
+    search_fields = ('nombre', 'tipo_servicio')
+
+🚀 Paso Final: Ejecutar Proyecto
+
+    bash
+# Realizar migraciones finales
+    python manage.py makemigrations
+    python manage.py migrate
+
+# Crear superusuario (opcional)
+
+    python manage.py createsuperuser
+
+# Ejecutar servidor en puerto 0262
+
+    python manage.py runserver 0262
+
+✅ Funcionalidades Completas
+✅ Sistema completo de gestión SPA
+✅ CRUD completo para empleados
+✅ Diseño moderno con Bootstrap
+✅ Estructura profesional
+✅ Navegación responsive
+✅ Plantillas organizadas
+
+🌐 Acceso al Sistema
+
+    Sitio web: http://127.0.0.1:0262/
+    Panel admin: http://127.0.0.1:0262/admin/
